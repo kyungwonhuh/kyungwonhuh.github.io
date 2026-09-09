@@ -1,0 +1,228 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import { getPosts, postPath, formatDate, readingTime, neighbors } from '../../lib/posts';
+import { categoryOf } from '../../../site.config.mjs';
+import { url } from '../../lib/url';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = await getPosts();
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post, posts },
+  }));
+};
+
+const { post, posts } = Astro.props;
+const { Content } = await render(post);
+const category = categoryOf(post.data.category);
+const { newer, older } = neighbors(posts, post);
+const minutes = readingTime(post.body);
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description ?? post.data.title}
+  type="article"
+  publishedAt={post.data.date}
+  image={post.data.cover?.src}
+  narrow
+>
+  <article>
+    <header class="post-head">
+      <p class="kicker">
+        <a href={url(`/categories/${category.slug}`)}>{category.name}</a>
+      </p>
+      <h1>{post.data.title}</h1>
+      {post.data.description && <p class="lede">{post.data.description}</p>}
+      <p class="meta">
+        <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+        <span class="dot">·</span>
+        <span>{minutes}분 읽기</span>
+        {
+          post.data.updated && (
+            <>
+              <span class="dot">·</span>
+              <span>{formatDate(post.data.updated)} 수정</span>
+            </>
+          )
+        }
+      </p>
+      {post.data.draft && <p class="draft">아직 공개되지 않은 초고입니다.</p>}
+    </header>
+
+    {
+      post.data.cover && (
+        <figure class="cover">
+          <Image src={post.data.cover} alt={post.data.coverAlt ?? ''} widths={[640, 960, 1280]} sizes="(max-width: 46rem) 100vw, 40rem" />
+          {post.data.coverAlt && <figcaption>{post.data.coverAlt}</figcaption>}
+        </figure>
+      )
+    }
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    {
+      post.data.tags.length > 0 && (
+        <ul class="tags">
+          {post.data.tags.map((tag: string) => (
+            <li>
+              <a class="tag" href={url(`/tags/${encodeURIComponent(tag)}`)}>#{tag}</a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+
+    <AdSlot slot="afterPost" />
+  </article>
+
+  {
+    (newer || older) && (
+      <nav class="pager" aria-label="다른 글">
+        {older ? (
+          <a href={url(postPath(older))} class="prev">
+            <span class="label">이전 글</span>
+            <span class="t">{older.data.title}</span>
+          </a>
+        ) : (
+          <span />
+        )}
+        {newer && (
+          <a href={url(postPath(newer))} class="next">
+            <span class="label">다음 글</span>
+            <span class="t">{newer.data.title}</span>
+          </a>
+        )}
+      </nav>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .post-head {
+    max-width: var(--measure);
+    margin-bottom: 2.5rem;
+  }
+
+  .kicker {
+    margin: 0 0 0.9rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+  }
+
+  .kicker a {
+    text-decoration: none;
+  }
+
+  h1 {
+    font-size: clamp(1.6rem, 4.5vw, 2.1rem);
+    line-height: 1.35;
+    letter-spacing: -0.03em;
+    font-weight: 680;
+    margin: 0;
+  }
+
+  .lede {
+    margin: 0.9rem 0 0;
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    line-height: 1.75;
+  }
+
+  .meta {
+    margin: 1.25rem 0 0;
+    font-size: 0.82rem;
+    color: var(--text-faint);
+    display: flex;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+  }
+
+  .draft {
+    margin: 1.25rem 0 0;
+    font-size: 0.82rem;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius);
+    display: inline-block;
+  }
+
+  .cover {
+    max-width: var(--measure);
+    margin: 0 0 2.75rem;
+  }
+
+  .cover :global(img) {
+    border-radius: var(--radius);
+    width: 100%;
+  }
+
+  .cover figcaption {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-top: 0.65rem;
+    text-align: center;
+  }
+
+  .tags {
+    max-width: var(--measure);
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 3rem 0 0;
+    padding: 0;
+  }
+
+  .pager {
+    max-width: var(--measure);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 3.5rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .pager a {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 0.92rem;
+  }
+
+  .pager .next {
+    text-align: right;
+  }
+
+  .label {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  .t {
+    line-height: 1.55;
+    letter-spacing: -0.015em;
+  }
+
+  @media (max-width: 32rem) {
+    .pager {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+    .pager .next {
+      text-align: left;
+    }
+  }
+</style>

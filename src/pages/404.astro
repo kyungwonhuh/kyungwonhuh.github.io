@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { url } from '../lib/url';
+---
+
+<BaseLayout title="페이지를 찾을 수 없습니다" noindex narrow>
+  <div class="box">
+    <p class="eyebrow">404</p>
+    <h1>찾으시는 페이지가 없습니다.</h1>
+    <p class="muted">주소가 바뀌었거나, 글이 지워졌을 수 있습니다.</p>
+    <p class="links">
+      <a href={url('/')}>홈으로</a>
+      <span class="dot">·</span>
+      <a href={url('/archive')}>전체 글 보기</a>
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  .box {
+    max-width: var(--measure);
+    padding-block: 3rem;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+    letter-spacing: -0.03em;
+    margin: 0 0 0.6rem;
+  }
+
+  .muted {
+    margin: 0;
+  }
+
+  .links {
+    margin-top: 2rem;
+    font-size: 0.95rem;
+    display: flex;
+    gap: 0.6rem;
+  }
+</style>
