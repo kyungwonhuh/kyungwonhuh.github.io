@@ -7,29 +7,28 @@
 
 ## 1. 처음 한 번만 하는 설정
 
-사이트가 인터넷에 보이려면 GitHub에서 **두 가지**를 해야 합니다. 순서가 중요합니다.
+사이트 주소는 **`https://kyungwonhuh.github.io/`** 입니다.
 
-### (1) 저장소 이름 바꾸기
+github.io 주소는 **GitHub 아이디와 저장소 이름이 똑같아야** 뒤에 붙는 경로 없이
+깔끔하게 열립니다. 그래서 이 둘이 항상 짝을 이뤄야 합니다.
 
-이 사이트는 주소가 **`https://kyungwonhuh0503.github.io/`** 로 딱 떨어지도록 맞춰져
-있습니다. 그렇게 되려면 저장소 이름이 그 주소와 똑같아야 합니다.
+| 항목 | 값 |
+| --- | --- |
+| GitHub 아이디 | `kyungwonhuh` |
+| 저장소 이름 | `kyungwonhuh.github.io` |
+| `site.config.mjs` 의 `site` | `https://kyungwonhuh.github.io` |
 
-1. GitHub에서 이 저장소로 갑니다
-2. 위쪽 **Settings** 탭 클릭
-3. 맨 위 **Repository name** 칸의 내용을 지우고 **`kyungwonhuh0503.github.io`** 입력
-4. 옆의 **Rename** 버튼 클릭
+셋 중 하나만 달라도 사이트가 안 열리거나 이상한 주소로 열립니다.
 
-> 이름을 바꿔도 기존 주소는 GitHub가 자동으로 새 주소로 넘겨주기 때문에,
-> 컴퓨터에 받아둔 폴더에서 그대로 계속 작업하셔도 됩니다.
+### Pages 스위치 (한 번만)
 
-### (2) Pages 스위치 켜기
+1. 저장소 → **Settings** 탭
+2. 왼쪽 메뉴의 **Pages**
+3. **Source** 항목을 **GitHub Actions** 로 선택
 
-1. 같은 **Settings** 안에서 왼쪽 메뉴의 **Pages** 클릭
-2. **Source** 항목을 **GitHub Actions** 로 선택
-
-이러고 나서 글을 올리면 1~2분 뒤 아래 주소에서 사이트가 열립니다.
-
-**https://kyungwonhuh0503.github.io/**
+> **주소를 또 바꾸고 싶어지면** — 아이디를 바꾸면 저장소 이름과 위 `site` 값도
+> 같이 바꿔야 합니다. 그리고 이전 github.io 주소는 리다이렉트되지 않고 그냥
+> 닫힙니다. Claude Code에게 말씀하시면 설정 쪽은 한 번에 맞춰드립니다.
 
 ---
 
