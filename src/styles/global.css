@@ -302,6 +302,11 @@ main {
   margin-top: 1em;
 }
 
+/* 원문 인용 바로 아래 번역을 붙일 때, 둘이 한 쌍으로 읽히도록 */
+.prose > blockquote + blockquote {
+  margin-top: 0.6em;
+}
+
 .prose img {
   border-radius: var(--radius);
   margin-inline: auto;

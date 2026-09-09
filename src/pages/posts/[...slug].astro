@@ -82,7 +82,14 @@ const translation = findTranslation(posts, post);
     {
       post.data.cover && (
         <figure class="cover">
-          <Image src={post.data.cover} alt={post.data.coverAlt ?? ''} widths={[640, 960, 1280]} sizes="(max-width: 46rem) 100vw, 40rem" />
+          <Image
+            src={post.data.cover}
+            alt={post.data.coverAlt ?? ''}
+            widths={[640, 960, 1280]}
+            sizes="(max-width: 46rem) 100vw, 40rem"
+            loading="eager"
+            fetchpriority="high"
+          />
           {post.data.coverAlt && <figcaption>{post.data.coverAlt}</figcaption>}
         </figure>
       )
@@ -205,6 +212,10 @@ const translation = findTranslation(posts, post);
   .cover :global(img) {
     border-radius: var(--radius);
     width: 100%;
+    /* 세로로 긴 사진이 글 전체를 밀어내지 않도록 높이를 제한합니다.
+       가로 사진은 이 높이에 닿지 않아 그대로 나옵니다. */
+    max-height: 34rem;
+    object-fit: cover;
   }
 
   .cover figcaption {
