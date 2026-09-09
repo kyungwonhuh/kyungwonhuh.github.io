@@ -10,14 +10,6 @@
     "check": "astro check",
     "new": "node scripts/new-post.mjs"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kyungwonhuh0503/test-repo.git"
-  },
-  "bugs": {
-    "url": "https://github.com/kyungwonhuh0503/test-repo/issues"
-  },
-  "homepage": "https://github.com/kyungwonhuh0503/test-repo#readme",
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",

@@ -7,7 +7,7 @@ export async function GET(context) {
     (a, b) => b.data.date.getTime() - a.data.date.getTime(),
   );
 
-  // base 경로(예: /test-repo)까지 포함한 사이트 주소
+  // base 경로까지 포함한 사이트 주소
   const base = `${SITE.base.replace(/\/$/, '')}/`;
   const site = new URL(base, context.site);
 

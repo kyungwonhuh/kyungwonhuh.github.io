@@ -35,8 +35,8 @@ npm run new -- "제목" [essay|taste|place|training]
 ## 지켜야 할 것
 
 - **링크는 반드시 `url()` 헬퍼를 거칩니다** (`src/lib/url.ts`).
-  GitHub Pages 프로젝트 사이트라 `base`(`/test-repo`)가 붙기 때문에,
-  `href="/about"` 처럼 직접 쓰면 링크가 깨집니다. `href={url('/about')}` 로 씁니다.
+  지금은 `base` 가 `/` 라 직접 써도 우연히 동작하지만, 주소 구조가 바뀌는 순간
+  전부 깨집니다. `href="/about"` 이 아니라 `href={url('/about')}` 로 씁니다.
 - 사이트 설정은 `site.config.mjs` 한 곳에 모읍니다. 값을 여러 파일에 흩뿌리지 않습니다.
 - 색·글자·여백은 `src/styles/global.css` 위쪽 CSS 변수로 조절합니다.
   다크 모드 토큰(`:root[data-theme='dark']` 와 `prefers-color-scheme` 블록)도
