@@ -20,12 +20,11 @@ export const SITE = {
 
   /**
    * 사이트 주소.
-   * GitHub Pages 무료 주소를 쓰는 동안은 아래 그대로 두면 됩니다.
-   * 나중에 개인 도메인을 사면 site 를 'https://내도메인.com' 으로,
-   * base 를 '/' 로 바꾸면 됩니다.
+   * 저장소 이름이 'kyungwonhuh0503.github.io' 이므로 주소 뒤에 붙는 경로가 없습니다.
+   * 나중에 개인 도메인을 사면 site 만 'https://내도메인.com' 으로 바꾸면 됩니다.
    */
   site: 'https://kyungwonhuh0503.github.io',
-  base: '/test-repo',
+  base: '/',
 
   /** 언어 설정 */
   locale: 'ko-KR',

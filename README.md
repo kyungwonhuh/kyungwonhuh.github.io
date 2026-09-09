@@ -7,21 +7,29 @@
 
 ## 1. 처음 한 번만 하는 설정
 
-사이트가 인터넷에 보이려면 GitHub에서 **딱 한 번** 스위치를 켜야 합니다.
+사이트가 인터넷에 보이려면 GitHub에서 **두 가지**를 해야 합니다. 순서가 중요합니다.
+
+### (1) 저장소 이름 바꾸기
+
+이 사이트는 주소가 **`https://kyungwonhuh0503.github.io/`** 로 딱 떨어지도록 맞춰져
+있습니다. 그렇게 되려면 저장소 이름이 그 주소와 똑같아야 합니다.
 
 1. GitHub에서 이 저장소로 갑니다
 2. 위쪽 **Settings** 탭 클릭
-3. 왼쪽 메뉴에서 **Pages** 클릭
-4. **Source** 항목을 **GitHub Actions** 로 선택
-5. 저장
+3. 맨 위 **Repository name** 칸의 내용을 지우고 **`kyungwonhuh0503.github.io`** 입력
+4. 옆의 **Rename** 버튼 클릭
 
-이러고 나서 글을 올리면 몇 분 뒤 아래 주소에서 사이트가 열립니다.
+> 이름을 바꿔도 기존 주소는 GitHub가 자동으로 새 주소로 넘겨주기 때문에,
+> 컴퓨터에 받아둔 폴더에서 그대로 계속 작업하셔도 됩니다.
 
-**https://kyungwonhuh0503.github.io/test-repo/**
+### (2) Pages 스위치 켜기
 
-> 주소에 `test-repo`가 들어가는 게 마음에 걸리면, GitHub에서 저장소 이름을
-> 원하는 이름(예: `blog`)으로 바꾸고 `site.config.mjs` 의 `base` 값도
-> 똑같이(`'/blog'`) 바꾸면 됩니다.
+1. 같은 **Settings** 안에서 왼쪽 메뉴의 **Pages** 클릭
+2. **Source** 항목을 **GitHub Actions** 로 선택
+
+이러고 나서 글을 올리면 1~2분 뒤 아래 주소에서 사이트가 열립니다.
+
+**https://kyungwonhuh0503.github.io/**
 
 ---
 
@@ -110,7 +118,7 @@ npm install    # 맨 처음 한 번만
 npm run dev
 ```
 
-터미널에 뜨는 주소(보통 http://localhost:4321/test-repo/)를 브라우저에서 엽니다.
+터미널에 뜨는 주소(보통 http://localhost:4321/)를 브라우저에서 엽니다.
 파일을 저장하면 화면이 바로 바뀝니다.
 
 `draft: true` 인 글도 미리 보기에서는 보이지만, 실제 사이트에는 나가지 않습니다.
@@ -176,10 +184,9 @@ ads: {
 
 도메인을 샀다면:
 
-1. `site.config.mjs` 에서
+1. `site.config.mjs` 에서 `site` 만 바꿉니다
    ```js
    site: 'https://내도메인.com',
-   base: '/',
    ```
 2. `public/CNAME` 파일을 만들고 안에 `내도메인.com` 한 줄만 적습니다
 3. 도메인 구매처에서 DNS를 GitHub Pages 쪽으로 연결합니다
