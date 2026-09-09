@@ -1,0 +1,50 @@
+---
+import { SITE } from '../../site.config.mjs';
+
+interface Props {
+  /** site.config.mjs 의 ads.slots 안에 있는 이름 */
+  slot?: keyof typeof SITE.ads.slots;
+}
+
+const { slot = 'afterPost' } = Astro.props;
+const slotId = SITE.ads.slots[slot];
+const show = SITE.ads.enabled && SITE.ads.client && slotId;
+---
+
+{
+  show && (
+    <aside class="ad" aria-label="광고">
+      <span class="label">광고</span>
+      <ins
+        class="adsbygoogle"
+        style="display:block"
+        data-ad-client={SITE.ads.client}
+        data-ad-slot={slotId}
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      />
+      <script is:inline>
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </aside>
+  )
+}
+
+<style>
+  /* 광고는 본문과 분명히 분리하되, 요란하지 않게 */
+  .ad {
+    max-width: var(--measure);
+    margin-top: 3.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .label {
+    display: block;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 0.75rem;
+  }
+</style>

@@ -1,0 +1,48 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostList from '../../components/PostList.astro';
+import { getPosts } from '../../lib/posts';
+import { CATEGORIES } from '../../../site.config.mjs';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = await getPosts();
+  return CATEGORIES.map((category) => ({
+    params: { category: category.slug },
+    props: {
+      category,
+      posts: posts.filter((p) => p.data.category === category.slug),
+    },
+  }));
+};
+
+const { category, posts } = Astro.props;
+---
+
+<BaseLayout title={category.name} description={category.description}>
+  <header class="page-head">
+    <p class="eyebrow">Category</p>
+    <h1>{category.name}</h1>
+    <p class="muted">{category.description}</p>
+  </header>
+
+  <PostList posts={posts} showCategory={false} />
+</BaseLayout>
+
+<style>
+  .page-head {
+    margin-bottom: 3rem;
+    max-width: var(--measure);
+  }
+
+  .page-head h1 {
+    font-size: 1.75rem;
+    letter-spacing: -0.025em;
+    margin: 0 0 0.4rem;
+  }
+
+  .page-head p.muted {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+</style>
