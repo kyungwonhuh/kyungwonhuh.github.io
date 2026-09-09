@@ -1,13 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostList from '../components/PostList.astro';
-import { getPostsPinnedFirst } from '../lib/posts';
+import LangFilter from '../components/LangFilter.astro';
+import { getPostsPinnedFirst, countByLang } from '../lib/posts';
 import { SITE, CATEGORIES } from '../../site.config.mjs';
 import { url } from '../lib/url';
 
 const all = await getPostsPinnedFirst();
 const posts = all.slice(0, SITE.postsOnHome);
 const hasMore = all.length > posts.length;
+// 필터 개수는 이 화면에 실제로 보이는 글 기준으로 셉니다
+const langCounts = countByLang(posts);
 ---
 
 <BaseLayout>
@@ -27,7 +30,10 @@ const hasMore = all.length > posts.length;
   </nav>
 
   <section class="recent">
-    <h2 class="section-label">최근 글</h2>
+    <div class="section-head">
+      <h2 class="section-label">최근 글</h2>
+      <LangFilter counts={langCounts} />
+    </div>
     <PostList posts={posts} />
     {
       hasMore && (
@@ -92,6 +98,25 @@ const hasMore = all.length > posts.length;
     font-size: 0.8rem;
     color: var(--text-muted);
     line-height: 1.55;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    max-width: var(--measure);
+    margin-bottom: 0.9rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* 묶음 안으로 들어왔으니 라벨 자체의 선과 여백은 지웁니다 */
+  .section-head .section-label {
+    margin: 0;
+    padding: 0;
+    border: 0;
   }
 
   .more {

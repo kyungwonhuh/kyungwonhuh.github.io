@@ -1,0 +1,117 @@
+---
+import { LANGUAGES } from '../../site.config.mjs';
+
+interface Props {
+  /** 언어별 글 개수 — { ko: 4, en: 2 } */
+  counts?: Record<string, number>;
+}
+
+const { counts = {} } = Astro.props;
+
+// 글이 한 종류 언어뿐이면 필터를 보여줄 이유가 없습니다.
+const present = LANGUAGES.filter((l) => (counts[l.code] ?? 0) > 0);
+const show = present.length > 1;
+const total = Object.values(counts).reduce((a, b) => a + b, 0);
+---
+
+{
+  show && (
+    <div class="lang-filter" role="group" aria-label="언어별로 보기">
+      <button type="button" data-lang-filter="all" aria-pressed="true">
+        전체 <span class="n">{total}</span>
+      </button>
+      {present.map((l) => (
+        <button type="button" data-lang-filter={l.code} aria-pressed="false">
+          {l.label} <span class="n">{counts[l.code]}</span>
+        </button>
+      ))}
+    </div>
+  )
+}
+
+<style>
+  .lang-filter {
+    display: flex;
+    gap: 0.15rem;
+    flex-wrap: wrap;
+  }
+
+  button {
+    font: inherit;
+    font-size: 0.78rem;
+    line-height: 1.4;
+    color: var(--text-faint);
+    background: none;
+    border: 0;
+    border-radius: 999px;
+    padding: 0.25rem 0.6rem;
+    cursor: pointer;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+
+  button:hover {
+    color: var(--text);
+  }
+
+  button[aria-pressed='true'] {
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .n {
+    font-variant-numeric: tabular-nums;
+    opacity: 0.65;
+    margin-left: 0.1em;
+  }
+</style>
+
+<script is:inline>
+  (() => {
+    const buttons = document.querySelectorAll('[data-lang-filter]');
+    if (buttons.length === 0) return;
+
+    const KEY = 'post-lang-filter';
+
+    function apply(value) {
+      // 글 하나하나 보이기/숨기기
+      document.querySelectorAll('[data-lang-item]').forEach((el) => {
+        el.hidden = value !== 'all' && el.dataset.langItem !== value;
+      });
+
+      // 연도 묶음처럼, 안이 전부 비면 제목까지 숨깁니다
+      document.querySelectorAll('[data-lang-group]').forEach((group) => {
+        const visible = group.querySelectorAll('[data-lang-item]:not([hidden])').length;
+        group.hidden = visible === 0;
+      });
+
+      // 결과가 하나도 없을 때 안내
+      const remaining = document.querySelectorAll('[data-lang-item]:not([hidden])').length;
+      document.querySelectorAll('[data-lang-empty]').forEach((el) => {
+        el.hidden = remaining !== 0;
+      });
+
+      buttons.forEach((b) => {
+        b.setAttribute('aria-pressed', String(b.dataset.langFilter === value));
+      });
+    }
+
+    buttons.forEach((b) => {
+      b.addEventListener('click', () => {
+        const value = b.dataset.langFilter;
+        apply(value);
+        try {
+          localStorage.setItem(KEY, value);
+        } catch {}
+      });
+    });
+
+    // 지난번에 고른 값을 기억합니다
+    let saved = 'all';
+    try {
+      saved = localStorage.getItem(KEY) ?? 'all';
+    } catch {}
+    if (saved !== 'all' && document.querySelector(`[data-lang-filter="${saved}"]`)) {
+      apply(saved);
+    }
+  })();
+</script>

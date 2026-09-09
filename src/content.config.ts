@@ -1,6 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
-import { CATEGORY_SLUGS } from '../site.config.mjs';
+import { CATEGORY_SLUGS, LANG_CODES, DEFAULT_LANG } from '../site.config.mjs';
 
 const posts = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/posts' }),
@@ -16,6 +16,13 @@ const posts = defineCollection({
       updated: z.coerce.date().optional(),
       /** 카테고리 — site.config.mjs 의 slug 중 하나 */
       category: z.enum(CATEGORY_SLUGS as [string, ...string[]]),
+      /** 글의 언어 — 'ko' 또는 'en'. 적지 않으면 한국어로 봅니다 */
+      lang: z.enum(LANG_CODES as [string, ...string[]]).default(DEFAULT_LANG),
+      /**
+       * 같은 내용을 다른 언어로도 쓴 경우, 그 글의 파일 이름(확장자 제외)을 적습니다.
+       * 한쪽에만 적어두면 두 글이 서로 연결됩니다. 번역은 의무가 아닙니다.
+       */
+      translation: z.string().optional(),
       /** 태그 (선택) */
       tags: z.array(z.string()).default([]),
       /** 대표 이미지 — ./images/파일명.jpg 처럼 상대경로로 씁니다 */
