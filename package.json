@@ -8,6 +8,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
+    "check:posts": "node scripts/check-posts.mjs",
+    "predev": "node scripts/check-posts.mjs",
+    "prebuild": "node scripts/check-posts.mjs",
     "new": "node scripts/new-post.mjs"
   },
   "dependencies": {
