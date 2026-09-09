@@ -1,7 +1,7 @@
 ---
 import type { Post } from '../lib/posts';
 import { postPath, formatDateShort } from '../lib/posts';
-import { categoryOf } from '../../site.config.mjs';
+import { categoryOf, DEFAULT_LANG, languageOf } from '../../site.config.mjs';
 import { url } from '../lib/url';
 
 interface Props {
@@ -16,14 +16,23 @@ const { posts, showCategory = true } = Astro.props;
 <ul class="posts">
   {
     posts.map((post) => (
-      <li class="post">
+      <li class="post" data-lang-item={post.data.lang}>
         <a class="cover" href={url(postPath(post))}>
-          <span class="title">
+          <span class="title" lang={post.data.lang}>
             {post.data.pinned && <span class="pin" title="고정된 글">★</span>}
             {post.data.title}
+            {post.data.lang !== DEFAULT_LANG && (
+              <span class="lang" aria-label={`${languageOf(post.data.lang).noun}로 쓴 글`}>
+                {languageOf(post.data.lang).short}
+              </span>
+            )}
           </span>
         </a>
-        {post.data.description && <p class="desc">{post.data.description}</p>}
+        {post.data.description && (
+          <p class="desc" lang={post.data.lang}>
+            {post.data.description}
+          </p>
+        )}
         <p class="meta">
           <time datetime={post.data.date.toISOString()}>{formatDateShort(post.data.date)}</time>
           {showCategory && (
@@ -39,6 +48,9 @@ const { posts, showCategory = true } = Astro.props;
 </ul>
 
 {posts.length === 0 && <p class="muted empty">아직 올라온 글이 없습니다.</p>}
+
+{/* 언어 필터를 걸어서 남는 글이 없을 때만 보입니다 */}
+<p class="muted empty" data-lang-empty hidden>이 언어로 쓴 글이 아직 없습니다.</p>
 
 <style>
   .posts {
@@ -69,6 +81,25 @@ const { posts, showCategory = true } = Astro.props;
   }
 
   .cover:hover .title { color: var(--accent); }
+
+  .lang {
+    display: inline-block;
+    font-size: 0.62em;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--text-faint);
+    border: 1px solid var(--line-strong);
+    border-radius: 3px;
+    padding: 0.05em 0.4em;
+    margin-left: 0.5em;
+    vertical-align: 0.22em;
+    white-space: nowrap;
+  }
+
+  .cover:hover .lang {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
 
   .pin {
     color: var(--accent);
