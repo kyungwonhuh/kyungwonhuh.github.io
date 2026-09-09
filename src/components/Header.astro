@@ -1,0 +1,104 @@
+---
+import { SITE, CATEGORIES } from '../../site.config.mjs';
+import { url } from '../lib/url';
+import ThemeToggle from './ThemeToggle.astro';
+
+const path = Astro.url.pathname.replace(/\/$/, '');
+const isActive = (href: string) => {
+  const target = url(href).replace(/\/$/, '');
+  return path === target || path.startsWith(`${target}/`);
+};
+---
+
+<header class="site-header">
+  <div class="wrap inner">
+    <a class="brand" href={url('/')}>{SITE.title}</a>
+
+    <nav aria-label="주요 메뉴">
+      <ul>
+        {
+          CATEGORIES.map((c) => (
+            <li>
+              <a
+                href={url(`/categories/${c.slug}`)}
+                aria-current={isActive(`/categories/${c.slug}`) ? 'page' : undefined}
+              >
+                {c.name}
+              </a>
+            </li>
+          ))
+        }
+        <li>
+          <a href={url('/archive')} aria-current={isActive('/archive') ? 'page' : undefined}>전체</a>
+        </li>
+        <li>
+          <a href={url('/about')} aria-current={isActive('/about') ? 'page' : undefined}>소개</a>
+        </li>
+      </ul>
+    </nav>
+
+    <ThemeToggle />
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+
+  .inner {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    min-height: 3.75rem;
+    flex-wrap: wrap;
+    padding-block: 0.6rem;
+  }
+
+  .brand {
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    font-size: 1rem;
+    text-decoration: none;
+    white-space: nowrap;
+    margin-right: auto;
+  }
+
+  nav ul {
+    display: flex;
+    gap: 1.1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-wrap: wrap;
+  }
+
+  nav a {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  nav a:hover,
+  nav a[aria-current='page'] {
+    color: var(--text);
+  }
+
+  nav a[aria-current='page'] {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 0.3em;
+  }
+
+  @media (max-width: 34rem) {
+    .inner { gap: 0.75rem 1rem; }
+    .brand { width: 100%; margin-right: 0; }
+    nav { margin-right: auto; }
+    nav ul { gap: 0.9rem; }
+  }
+</style>

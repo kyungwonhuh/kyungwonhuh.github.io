@@ -1,0 +1,42 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  frontmatter?: { title?: string; description?: string };
+  title?: string;
+  description?: string;
+}
+
+// 마크다운 페이지(.md)에서는 frontmatter 로, .astro 페이지에서는 직접 전달됩니다.
+const title = Astro.props.frontmatter?.title ?? Astro.props.title;
+const description = Astro.props.frontmatter?.description ?? Astro.props.description;
+---
+
+<BaseLayout title={title} description={description} narrow>
+  <article>
+    {
+      title && (
+        <header class="page-head">
+          <h1>{title}</h1>
+        </header>
+      )
+    }
+    <div class="prose">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .page-head {
+    max-width: var(--measure);
+    margin-bottom: 2.25rem;
+  }
+
+  h1 {
+    font-size: clamp(1.6rem, 4.5vw, 2rem);
+    letter-spacing: -0.03em;
+    line-height: 1.35;
+    margin: 0;
+  }
+</style>

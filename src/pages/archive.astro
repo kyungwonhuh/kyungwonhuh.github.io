@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPosts, postPath, formatDateShort } from '../lib/posts';
+import { categoryOf } from '../../site.config.mjs';
+import { url } from '../lib/url';
+
+const posts = await getPosts();
+
+const byYear = new Map<number, typeof posts>();
+for (const post of posts) {
+  const year = post.data.date.getFullYear();
+  byYear.set(year, [...(byYear.get(year) ?? []), post]);
+}
+const years = [...byYear.entries()].sort((a, b) => b[0] - a[0]);
+---
+
+<BaseLayout title="전체 글" description="지금까지 쓴 글 전체 목록.">
+  <header class="page-head">
+    <p class="eyebrow">Archive</p>
+    <h1>전체 글</h1>
+    <p class="muted">{posts.length}편의 글이 쌓여 있습니다.</p>
+  </header>
+
+  {
+    years.map(([year, list]) => (
+      <section class="year">
+        <h2>{year}</h2>
+        <ul>
+          {list.map((post) => (
+            <li>
+              <time datetime={post.data.date.toISOString()}>{formatDateShort(post.data.date)}</time>
+              <a href={url(postPath(post))}>{post.data.title}</a>
+              <span class="cat">{categoryOf(post.data.category).name}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
+
+  {posts.length === 0 && <p class="muted">아직 올라온 글이 없습니다.</p>}
+</BaseLayout>
+
+<style>
+  .page-head {
+    margin-bottom: 3rem;
+    max-width: var(--measure);
+  }
+
+  .page-head h1 {
+    font-size: 1.75rem;
+    letter-spacing: -0.025em;
+    margin: 0 0 0.4rem;
+  }
+
+  .page-head p.muted {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  .year {
+    max-width: var(--measure);
+    margin-bottom: 2.75rem;
+  }
+
+  .year h2 {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--text-faint);
+    margin: 0 0 0.75rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    display: grid;
+    grid-template-columns: 5.5rem 1fr auto;
+    gap: 0.75rem;
+    align-items: baseline;
+    padding-block: 0.55rem;
+    font-size: 0.95rem;
+  }
+
+  time {
+    color: var(--text-faint);
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  li a {
+    text-decoration: none;
+  }
+
+  .cat {
+    font-size: 0.75rem;
+    color: var(--text-faint);
+  }
+
+  @media (max-width: 32rem) {
+    li {
+      grid-template-columns: 1fr auto;
+    }
+    time {
+      grid-column: 1 / -1;
+      order: 2;
+      margin-top: -0.2rem;
+    }
+    li a { order: 1; }
+    .cat { order: 3; }
+  }
+</style>

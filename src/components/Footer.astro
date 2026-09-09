@@ -1,0 +1,51 @@
+---
+import { SITE } from '../../site.config.mjs';
+import { url } from '../lib/url';
+
+const year = new Date().getFullYear();
+const links = [
+  SITE.links.email && { label: '메일', href: `mailto:${SITE.links.email}` },
+  SITE.links.instagram && { label: '인스타그램', href: SITE.links.instagram },
+  SITE.links.github && { label: '깃허브', href: SITE.links.github },
+].filter(Boolean) as { label: string; href: string }[];
+---
+
+<footer>
+  <div class="wrap inner">
+    <p class="copy">© {year} {SITE.author}</p>
+    <ul>
+      {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      <li><a href={url('/rss.xml')}>RSS</a></li>
+    </ul>
+  </div>
+</footer>
+
+<style>
+  footer {
+    border-top: 1px solid var(--line);
+    padding-block: 2rem 2.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+
+  .inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .copy { margin: 0; }
+
+  ul {
+    display: flex;
+    gap: 1.1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  a { text-decoration: none; }
+</style>
