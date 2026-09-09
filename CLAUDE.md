@@ -28,6 +28,13 @@ npm run new -- "제목" [essay|taste|place|training]
 - `category` 는 `site.config.mjs` 의 `CATEGORIES` slug 중 하나여야 합니다.
   없는 값을 쓰면 빌드가 실패합니다.
 
+**인용문**
+
+- 마크다운 `>` 를 씁니다. 운영자가 직접 편집하므로 닫는 태그가 필요한 HTML 은
+  되도록 쓰지 않습니다. 실제로 `<blockquote>` 가 안 닫혀 본문이 전부 인용에
+  들어간 적이 있습니다.
+- 언어 표시가 꼭 필요하면 HTML 을 쓰되, 여닫음을 반드시 확인합니다.
+
 **사진**
 
 - `src/content/posts/images/` 에 두고 본문에서 `./images/파일.jpg` 로 참조합니다.
@@ -73,11 +80,20 @@ npm run new -- "제목" [essay|taste|place|training]
 ## 확인 방법
 
 ```bash
-npm run dev      # 미리 보기 (draft 글도 보임)
-npm run build    # 배포와 같은 방식으로 빌드 — 커밋 전에 꼭 한 번
+npm run dev          # 미리 보기 (draft 글도 보임)
+npm run build        # 배포와 같은 방식으로 빌드 — 커밋 전에 꼭 한 번
+npm run check:posts  # 글의 안 닫힌 HTML 태그 검사 (dev/build 시 자동 실행)
 ```
 
 `npm run build` 가 통과해야 배포가 성공합니다. 글을 추가·수정한 뒤에는 항상 빌드를 돌려봅니다.
+
+**빌드 통과가 화면이 멀쩡하다는 뜻은 아닙니다.** 안 닫힌 HTML 태그처럼
+빌드는 통과하면서 화면만 조용히 깨지는 경우가 있습니다. 글을 손댄 뒤에는
+렌더된 결과를 실제로 확인하세요.
+
+`scripts/check-posts.mjs` 가 `predev` / `prebuild` 로 자동 실행되어 그 부류를 잡습니다.
+운영자가 직접 글을 편집하므로, 비슷한 함정을 새로 발견하면 이 검사에 추가합니다.
+다만 **글쓰기를 막는 검사는 넣지 않습니다** — 맞춤법이나 문체 규칙 같은 건 대상이 아닙니다.
 
 ## 배포
 
