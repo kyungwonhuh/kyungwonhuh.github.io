@@ -20,10 +20,10 @@ export const SITE = {
 
   /**
    * 사이트 주소.
-   * 저장소 이름이 'kyungwonhuh0503.github.io' 이므로 주소 뒤에 붙는 경로가 없습니다.
+   * 저장소 이름이 'kyungwonhuh.github.io' 이므로 주소 뒤에 붙는 경로가 없습니다.
    * 나중에 개인 도메인을 사면 site 만 'https://내도메인.com' 으로 바꾸면 됩니다.
    */
-  site: 'https://kyungwonhuh0503.github.io',
+  site: 'https://kyungwonhuh.github.io',
   base: '/',
 
   /** 언어 설정 */
