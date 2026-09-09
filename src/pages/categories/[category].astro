@@ -2,7 +2,8 @@
 import type { GetStaticPaths } from 'astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PostList from '../../components/PostList.astro';
-import { getPosts } from '../../lib/posts';
+import LangFilter from '../../components/LangFilter.astro';
+import { getPosts, countByLang } from '../../lib/posts';
 import { CATEGORIES } from '../../../site.config.mjs';
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -17,6 +18,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 const { category, posts } = Astro.props;
+const langCounts = countByLang(posts);
 ---
 
 <BaseLayout title={category.name} description={category.description}>
@@ -24,6 +26,9 @@ const { category, posts } = Astro.props;
     <p class="eyebrow">Category</p>
     <h1>{category.name}</h1>
     <p class="muted">{category.description}</p>
+    <div class="filter">
+      <LangFilter counts={langCounts} />
+    </div>
   </header>
 
   <PostList posts={posts} showCategory={false} />
@@ -44,5 +49,10 @@ const { category, posts } = Astro.props;
   .page-head p.muted {
     margin: 0;
     font-size: 0.95rem;
+  }
+
+  .filter {
+    margin-top: 1rem;
+    margin-left: -0.6rem;
   }
 </style>
