@@ -75,6 +75,27 @@ export const CATEGORIES = [
 
 export const CATEGORY_SLUGS = CATEGORIES.map((c) => c.slug);
 
+/**
+ * 글에 쓸 수 있는 언어.
+ * 글마다 lang 을 적어두면 목록에서 걸러볼 수 있고,
+ * 검색엔진과 화면낭독기에도 그 글의 언어가 정확히 전달됩니다.
+ */
+export const LANGUAGES = [
+  // label 은 필터 버튼에, noun 은 한국어 문장 안에 들어갑니다
+  { code: 'ko', label: '한국어', noun: '한국어', short: 'KO', locale: 'ko-KR' },
+  { code: 'en', label: 'English', noun: '영어', short: 'EN', locale: 'en-US' },
+];
+
+export const LANG_CODES = LANGUAGES.map((l) => l.code);
+
+/** 글에 lang 을 적지 않았을 때의 기본 언어 */
+export const DEFAULT_LANG = 'ko';
+
+/** code 로 언어 정보를 찾습니다. */
+export function languageOf(code) {
+  return LANGUAGES.find((l) => l.code === code) ?? LANGUAGES[0];
+}
+
 /** slug 로 카테고리 정보를 찾습니다. */
 export function categoryOf(slug) {
   return CATEGORIES.find((c) => c.slug === slug) ?? { slug, name: slug, description: '' };
